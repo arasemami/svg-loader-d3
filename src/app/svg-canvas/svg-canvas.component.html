@@ -1,0 +1,8 @@
+<div class="container">
+  <label class="file-input-label">
+    Select SVG File
+    <input type="file" (change)="onFileSelected($event)" accept=".svg" />
+  </label>
+
+  <svg #svgContainer></svg>
+</div>

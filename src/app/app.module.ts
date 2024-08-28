@@ -3,14 +3,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SvgCanvasComponent } from './svg-canvas/svg-canvas.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SvgCanvasComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
