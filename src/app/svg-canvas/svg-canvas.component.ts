@@ -10,7 +10,8 @@ import * as d3 from 'd3';
 
 export class SvgCanvasComponent {
   @ViewChild('svgContainer', { static: true }) svgContainer!: ElementRef<SVGSVGElement>;
-
+  blinkInterval: any;
+  selectedElement: any;
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -49,9 +50,41 @@ export class SvgCanvasComponent {
       .on('mouseout', function () {
         d3.select(this).style('opacity', 1);
       })
-      .on('click', function () {
+      .on('click', (event, d) => {
+        if (this.selectedElement) {
+          this.stopBlinkingEffect();
+        }
+
+        this.selectedElement = event.currentTarget;
+
+        if (!d3.select(this.selectedElement).attr('data-original-fill')) {
+          d3.select(this.selectedElement).attr('data-original-fill', d3.select(this.selectedElement).attr('fill') || 'none');
+        }
+
         svgElement.selectAll('path, rect, circle').style('stroke', 'none');
-        d3.select(this).style('stroke', 'red').style('stroke-width', '5px');
+        d3.select(this.selectedElement).style('stroke', 'red').style('stroke-width', '5px');
+
+        this.startBlinkingEffect(this.selectedElement);
       });
+  }
+
+  startBlinkingEffect(element: any) {
+    let isRed = false;
+    const originalFill = d3.select(element).attr('fill');
+
+    this.blinkInterval = setInterval(() => {
+      d3.select(element).attr('fill', isRed ? originalFill : 'red');
+      isRed = !isRed;
+    }, 2000);
+  }
+
+  stopBlinkingEffect() {
+    if (this.blinkInterval) {
+      clearInterval(this.blinkInterval);
+      this.blinkInterval = null;
+
+      d3.select(this.selectedElement).attr('fill', d3.select(this.selectedElement).attr('data-original-fill'));
+      this.selectedElement = null;
+    }
   }
 }
